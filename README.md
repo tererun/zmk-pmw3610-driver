@@ -113,3 +113,31 @@ CONFIG_INPUT=y
 CONFIG_ZMK_MOUSE=y
 CONFIG_PMW3610=y
 ```
+
+## Runtime scroll direction
+
+The scroll direction defaults to `CONFIG_PMW3610_INVERT_SCROLL_X` and
+`CONFIG_PMW3610_INVERT_SCROLL_Y`. You can change it from the keymap with the
+`zmk,behavior-pmw3610-scroll-direction` behavior:
+
+```dts
+#include <dt-bindings/zmk/pmw3610.h>
+
+/ {
+    behaviors {
+        pmw_scroll_dir: pmw_scroll_dir {
+            compatible = "zmk,behavior-pmw3610-scroll-direction";
+            #binding-cells = <2>;
+        };
+    };
+};
+```
+
+Then bind it to keys:
+
+```dts
+&pmw_scroll_dir PMW3610_SCROLL_AXIS_Y PMW3610_SCROLL_DIR_TOGGLE
+&pmw_scroll_dir PMW3610_SCROLL_AXIS_X PMW3610_SCROLL_DIR_TOGGLE
+&pmw_scroll_dir PMW3610_SCROLL_AXIS_BOTH PMW3610_SCROLL_DIR_NORMAL
+&pmw_scroll_dir PMW3610_SCROLL_AXIS_BOTH PMW3610_SCROLL_DIR_INVERT
+```
