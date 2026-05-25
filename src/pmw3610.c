@@ -23,7 +23,9 @@
 #include <zmk/event_manager.h>
 #include <zmk/events/position_state_changed.h>
 #include <zmk/events/layer_state_changed.h>
+#include <dt-bindings/zmk/pmw3610.h>
 #include "pmw3610.h"
+#include "pmw3610_scroll.h"
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(pmw3610, CONFIG_INPUT_LOG_LEVEL);
@@ -734,13 +736,15 @@ static int pmw3610_report_data(const struct device *dev) {
             data->scroll_delta_y += y;
             if (abs(data->scroll_delta_y) > CONFIG_PMW3610_SCROLL_TICK) {
                 input_report_rel(dev, INPUT_REL_WHEEL,
-                                 data->scroll_delta_y > 0 ? PMW3610_SCROLL_Y_NEGATIVE : PMW3610_SCROLL_Y_POSITIVE,
+                                 pmw3610_scroll_report_value(PMW3610_SCROLL_AXIS_Y,
+                                                             data->scroll_delta_y),
                                  true, K_FOREVER);
                 data->scroll_delta_y = 0;
             }
             if (abs(data->scroll_delta_x) > CONFIG_PMW3610_SCROLL_TICK) {
                 input_report_rel(dev, INPUT_REL_HWHEEL,
-                                 data->scroll_delta_x > 0 ? PMW3610_SCROLL_X_NEGATIVE : PMW3610_SCROLL_X_POSITIVE,
+                                 pmw3610_scroll_report_value(PMW3610_SCROLL_AXIS_X,
+                                                             data->scroll_delta_x),
                                  true, K_FOREVER);
                 data->scroll_delta_x = 0;
             }
